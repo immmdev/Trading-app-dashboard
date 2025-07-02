@@ -1,47 +1,107 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function Wallet() {
-    let [amount, setAmount] = useState(0);
-    let [Widthdraw, setWithdraw] = useState(0);
-    let [isWithdraw, setIsWidthdraw] = useState(0);
+    const {user}=useAuthContext();
+    let [deposit, setDeposit] = useState(0);
+    let [withdraw, setWithdraw] = useState(0);
+    let [isWithdraw, setIsWithdraw] = useState(0);
+    let [isLoading,setIsLoading]=useState(false);
+    let [wallet,setWallet]=useState({});
+
+
+    const fetchWallet = async () => {
+        axios.get("http://localhost:3002/wallet", {
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        }).then((res)=>{
+            setWallet(res.data);
+        }).catch((err)=>{
+            toast.error("Wallet fetch failed!");
+        })
+    }
+    
+    useEffect(()=>{
+        if(user){
+            fetchWallet();
+        }
+    },[setDeposit,setIsWithdraw,user]);
+
+    const onClickHandle=(e)=>{
+        e.preventDefault();
+        setIsLoading(true);
+
+        if(isWithdraw==true && withdraw > wallet.amount){
+            toast.error("Insufficient amount!");
+             setIsLoading(false);
+            return;
+        }
+
+        if(withdraw==0 || deposit==0){
+            toast.error("Invalid amount!");
+             setIsLoading(false);
+            return;
+        }
+        const amountTosend= isWithdraw? -Math.abs(withdraw): Math.abs(deposit);
+
+    
+
+        axios.post("http://localhost:3002/wallet",{updatedAmount:amountTosend},{
+            headers:{
+               'Authorization': `Bearer ${user.token}`
+            }
+        }).then((res)=>{
+            console.log(res);
+            fetchWallet();
+            toast.success("Updated Wallet successfully");
+            setIsLoading(false);
+        }).catch((err)=>{
+            console.log(err);
+            toast.error("Updation wallet failed");
+            setIsLoading(false);
+        });
+    }
 
     return (
         <div className="container d-flex justify-content-center align-items-center mt-5">
             <div className="card shadow p-0" style={{ maxWidth: '500px', width: '100%' }}>
                 {/* Toggle Buttons */}
-               
-                    <div className="card-header d-flex justify-content-start">
-                        <div className="row ">
-                            <div className="col-6 text-center">
-                                <a
-                                    href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setIsWidthdraw(0);
-                                    }}
-                                    className={`d-inline-block pb-3 fw-semibold ${isWithdraw === 0 ? 'text-success border-success border-2 border-bottom' : 'text-muted'}`}
-                                    style={{ textDecoration: "none" }}
-                                >
-                                    Deposit
-                                </a>
-                            </div>
-                            <div className="col-6 pb-3 text-center">
-                                <a
-                                    href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setIsWidthdraw(1);
-                                    }}
-                                    className={`d-inline-block fw-semibold ${isWithdraw === 1 ? 'text-danger border-danger border-2 border-bottom' : 'text-muted'}`}
-                                    style={{ textDecoration: "none" }}
-                                >
-                                    Withdraw
-                                </a>
-                            </div>
-                        </div>
 
+                <div className="card-header d-flex justify-content-start">
+                    <div className="row ">
+                        <div className="col-6 text-center">
+                            <a
+                                href="#"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setIsWithdraw(0);
+                                }}
+                                className={`d-inline-block pb-3 fw-semibold ${isWithdraw === 0 ? 'text-success border-success border-2 border-bottom' : 'text-muted'}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                Deposit
+                            </a>
+                        </div>
+                        <div className="col-6 pb-3 text-center">
+                            <a
+                                href="#"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setIsWithdraw(1);
+                                }}
+                                className={`d-inline-block fw-semibold ${isWithdraw === 1 ? 'text-danger border-danger border-2 border-bottom' : 'text-muted'}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                Withdraw
+                            </a>
+                        </div>
                     </div>
-            
+
+                </div>
+
 
                 <div className='p-4'>
                     {isWithdraw ? (
@@ -55,12 +115,12 @@ function Wallet() {
                                     id="widthdraw"
                                     type="number"
                                     className="form-control"
-                                    value={Widthdraw}
+                                    value={withdraw}
                                     onChange={(e) => setWithdraw(e.target.value)}
                                 />
                             </div>
                             <div className="d-grid">
-                                <button className="btn withdraw-btn">WITHDRAW</button>
+                                <button onClick={onClickHandle} disabled={isLoading} className="btn withdraw-btn">{isLoading? "Withdrawing...":"WITHDRAW"}</button>
                             </div>
                         </>
                     ) : (
@@ -74,18 +134,18 @@ function Wallet() {
                                     id="amount"
                                     type="number"
                                     className="form-control"
-                                    value={amount}
-                                    onChange={(e) => setAmount(e.target.value)}
+                                    value={deposit}
+                                    onChange={(e) => setDeposit(e.target.value)}
                                 />
                             </div>
                             <div className="d-grid">
-                                <button className="btn deposit-btn">DEPOSIT</button>
+                                <button onClick={onClickHandle} disabled={isLoading}  className="btn deposit-btn">{isLoading? "Depositing...":"DEPOSIT"}</button>
                             </div>
                         </>
                     )}
 
                     <p className="text-center text-muted mt-4">
-                        Available amount: <strong>₹20,000</strong>
+                        Available amount: <strong>{wallet.amount? (wallet.amount).toFixed(2) : 0}</strong>
                     </p>
                 </div>
             </div>

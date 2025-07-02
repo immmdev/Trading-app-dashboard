@@ -70,14 +70,8 @@ const Menu = () => {
           </Link>
         </li>
 
-        {/* Wallet */}
-        <li className="nav-item mt-2">
-          <Link to="/wallet" style={{ textDecoration: "none" }} onClick={() => handleMenuClick(6)}>
-            <p className={selectedMenu === 6 ? activeMenuClass : menuClass}>
-              <i className="fa-solid fa-wallet me-2 "></i>
-            </p>
-          </Link>
-        </li>
+
+
 
         {/* If not logged in */}
         {!user && (
@@ -98,6 +92,14 @@ const Menu = () => {
         {/* If logged in */}
         {user && (
           <>
+            {/*wallet*/}
+            <li className="nav-item mt-2">
+              <Link to="/wallet" style={{ textDecoration: "none" }} onClick={() => handleMenuClick(6)}>
+                <p className={selectedMenu === 6 ? activeMenuClass : menuClass}>
+                  <i className="fa-solid fa-wallet me-2 "></i>
+                </p>
+              </Link>
+            </li>
             <li className="nav-item mt-1 mb-2">
               <button
                 type="button"
