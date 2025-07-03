@@ -4,6 +4,7 @@ import ZeroContext from './ZeroContext';
 const ZeroContextProvider=({children})=>{
     let [holdings, setHoldings] = useState([]);
     let [watchlist, setWatchlist] = useState([]);
+
     
     return (
         <ZeroContext.Provider value={{holdings, setHoldings,watchlist, setWatchlist}}>

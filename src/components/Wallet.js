@@ -5,7 +5,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 function Wallet() {
     const {user}=useAuthContext();
-    let [deposit, setDeposit] = useState(0);
+    let [deposit,setDeposit] = useState(0);
     let [withdraw, setWithdraw] = useState(0);
     let [isWithdraw, setIsWithdraw] = useState(0);
     let [isLoading,setIsLoading]=useState(false);
@@ -34,16 +34,23 @@ function Wallet() {
         e.preventDefault();
         setIsLoading(true);
 
-        if(isWithdraw==true && withdraw > wallet.amount){
-            toast.error("Insufficient amount!");
-             setIsLoading(false);
-            return;
-        }
-
-        if(withdraw==0 || deposit==0){
-            toast.error("Invalid amount!");
-             setIsLoading(false);
-            return;
+         if (isWithdraw === 1) {
+            if (isNaN(withdraw) || withdraw <= 0) {
+                toast.error("Enter a valid withdrawal amount!");
+                setIsLoading(false);
+                return;
+            }
+            if (withdraw > wallet.amount) {
+                toast.error("Insufficient amount!");
+                setIsLoading(false);
+                return;
+            }
+        } else {
+            if (isNaN(deposit) || deposit <= 0) {
+                toast.error("Enter a valid deposit amount!");
+                setIsLoading(false);
+                return;
+            }
         }
         const amountTosend= isWithdraw? -Math.abs(withdraw): Math.abs(deposit);
 
@@ -57,6 +64,7 @@ function Wallet() {
             console.log(res);
             fetchWallet();
             toast.success("Updated Wallet successfully");
+ 
             setIsLoading(false);
         }).catch((err)=>{
             console.log(err);
@@ -116,7 +124,7 @@ function Wallet() {
                                     type="number"
                                     className="form-control"
                                     value={withdraw}
-                                    onChange={(e) => setWithdraw(e.target.value)}
+                                    onChange={(e) => setWithdraw(Number(e.target.value))}
                                 />
                             </div>
                             <div className="d-grid">
@@ -135,7 +143,7 @@ function Wallet() {
                                     type="number"
                                     className="form-control"
                                     value={deposit}
-                                    onChange={(e) => setDeposit(e.target.value)}
+                                    onChange={(e) => setDeposit(Number(e.target.value))}
                                 />
                             </div>
                             <div className="d-grid">
