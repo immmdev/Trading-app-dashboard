@@ -96,21 +96,17 @@ const Menu = () => {
             <li className="nav-item mt-2">
               <Link to="/wallet" style={{ textDecoration: "none" }} onClick={() => handleMenuClick(6)}>
                 <p className={selectedMenu === 6 ? activeMenuClass : menuClass}>
-                  <i className="fa-solid fa-wallet me-2 "></i>
+                  Wallet
                 </p>
               </Link>
             </li>
-            <li className="nav-item mt-1 mb-2">
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="btn btn-outline-primary btn-sm px-3 py-1 fw-medium rounded logout-btn"
-              >
-                Logout
-              </button>
+            <li className="nav-item mt-1">
+              <Link to="/login" className="nav-link"  onClick={handleLogout}>
+                <p className={menuClass}>Logout</p>
+              </Link>
             </li>
-
-            <li className="nav-item mt-1 mb-2 ">
+            
+            <li className="nav-item  mb-2">
               <div
                 className="d-flex justify-content-center align-items-center rounded-circle text-white fw-bold"
                 style={{

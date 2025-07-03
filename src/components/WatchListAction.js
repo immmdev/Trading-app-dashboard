@@ -21,7 +21,7 @@ const WatchListActions = ({handleClick}) => {
 
                 <span>
                     <Tooltip title="Sell (S)" placement="top" arrow TransitionComponent={Grow}>
-                        <button className="sell">Sell</button>
+                        <button onClick={handleClick} className="sell">Sell</button>
                     </Tooltip>
 
                 </span>

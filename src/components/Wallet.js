@@ -1,15 +1,16 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { useAuthContext } from '../hooks/useAuthContext';
+import ZeroContext from '../context/ZeroContext';
 
 function Wallet() {
-    const {user}=useAuthContext();
-    let [deposit,setDeposit] = useState(0);
-    let [withdraw, setWithdraw] = useState(0);
+    const { user } = useAuthContext();
+    let {deposit, setDeposit} = useContext(ZeroContext);
+    let {withdraw, setWithdraw} = useContext(ZeroContext);
     let [isWithdraw, setIsWithdraw] = useState(0);
-    let [isLoading,setIsLoading]=useState(false);
-    let [wallet,setWallet]=useState({});
+    let [isLoading, setIsLoading] = useState(false);
+    const { wallet, setWallet } = useContext(ZeroContext);
 
 
     const fetchWallet = async () => {
@@ -17,24 +18,24 @@ function Wallet() {
             headers: {
                 'Authorization': `Bearer ${user.token}`
             }
-        }).then((res)=>{
+        }).then((res) => {
             setWallet(res.data);
-        }).catch((err)=>{
+        }).catch((err) => {
             toast.error("Wallet fetch failed!");
         })
     }
-    
-    useEffect(()=>{
-        if(user){
+
+    useEffect(() => {
+        if (user) {
             fetchWallet();
         }
-    },[setDeposit,setIsWithdraw,user]);
+    }, [setDeposit, setIsWithdraw, user, wallet]);
 
-    const onClickHandle=(e)=>{
+    const onClickHandle = (e) => {
         e.preventDefault();
         setIsLoading(true);
 
-         if (isWithdraw === 1) {
+        if (isWithdraw === 1) {
             if (isNaN(withdraw) || withdraw <= 0) {
                 toast.error("Enter a valid withdrawal amount!");
                 setIsLoading(false);
@@ -52,26 +53,27 @@ function Wallet() {
                 return;
             }
         }
-        const amountTosend= isWithdraw? -Math.abs(withdraw): Math.abs(deposit);
+        const amountTosend = isWithdraw ? -Math.abs(withdraw) : Math.abs(deposit);
 
-    
-
-        axios.post("http://localhost:3002/wallet",{updatedAmount:amountTosend},{
-            headers:{
-               'Authorization': `Bearer ${user.token}`
+        axios.post("http://localhost:3002/wallet", { updatedAmount: amountTosend }, {
+            headers: {
+                'Authorization': `Bearer ${user.token}`
             }
-        }).then((res)=>{
+        }).then((res) => {
             console.log(res);
             fetchWallet();
             toast.success("Updated Wallet successfully");
- 
+
             setIsLoading(false);
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err);
             toast.error("Updation wallet failed");
             setIsLoading(false);
         });
     }
+
+
+
 
     return (
         <div className="container d-flex justify-content-center align-items-center mt-5">
@@ -109,8 +111,6 @@ function Wallet() {
                     </div>
 
                 </div>
-
-
                 <div className='p-4'>
                     {isWithdraw ? (
                         <>
@@ -121,14 +121,14 @@ function Wallet() {
                                 <input
                                     placeholder="Withdraw Amount"
                                     id="widthdraw"
-                                    type="number"
+                                    type="text"
                                     className="form-control"
-                                    value={withdraw}
+                                    value={withdraw === 0 ? '' : withdraw}
                                     onChange={(e) => setWithdraw(Number(e.target.value))}
                                 />
                             </div>
                             <div className="d-grid">
-                                <button onClick={onClickHandle} disabled={isLoading} className="btn withdraw-btn">{isLoading? "Withdrawing...":"WITHDRAW"}</button>
+                                <button onClick={onClickHandle} disabled={isLoading} className="btn withdraw-btn">{isLoading ? "Withdrawing..." : "WITHDRAW"}</button>
                             </div>
                         </>
                     ) : (
@@ -140,20 +140,21 @@ function Wallet() {
                                 <input
                                     placeholder="Deposit Amount"
                                     id="amount"
-                                    type="number"
+                                    type="text"
                                     className="form-control"
-                                    value={deposit}
+                                    value={deposit === 0 ? '' : deposit}
                                     onChange={(e) => setDeposit(Number(e.target.value))}
                                 />
+
                             </div>
                             <div className="d-grid">
-                                <button onClick={onClickHandle} disabled={isLoading}  className="btn deposit-btn">{isLoading? "Depositing...":"DEPOSIT"}</button>
+                                <button onClick={onClickHandle} disabled={isLoading} className="btn deposit-btn">{isLoading ? "Depositing..." : "DEPOSIT"}</button>
                             </div>
                         </>
                     )}
 
                     <p className="text-center text-muted mt-4">
-                        Available amount: <strong>{wallet.amount? (wallet.amount).toFixed(2) : 0}</strong>
+                        Available amount: <strong>{wallet.amount ? (wallet.amount).toFixed(2) : 0}</strong>
                     </p>
                 </div>
             </div>
