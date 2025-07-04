@@ -1,6 +1,13 @@
-import React from "react";
+import React,{useContext} from "react";
+import ZeroContext from "../context/ZeroContext";
+
 
 const Summary = ({pnl,pnlp,currPrice,avgPrice}) => {
+    const { wallet, setWallet } = useContext(ZeroContext);
+    const {holdings}= useContext(ZeroContext);
+    let margin = currPrice>=avgPrice?  (currPrice-avgPrice).toFixed(2) : 0;
+    let balnceAvailable=(wallet.amount/1000).toFixed(2);
+    let pnlClass= currPrice>=avgPrice? "profit":"loss";
   return (
     <>
       <div className="username">
@@ -15,17 +22,14 @@ const Summary = ({pnl,pnlp,currPrice,avgPrice}) => {
 
         <div className="data">
           <div className="first">
-            <h3>3.74k</h3>
+            <h3>{margin}k</h3>
             <p>Margin available</p>
           </div>
           <hr />
 
           <div className="second">
             <p>
-              Margins used <span>0</span>{" "}
-            </p>
-            <p>
-              Opening balance <span>3.74k</span>{" "}
+              Balance <span>{balnceAvailable}k</span>{" "}
             </p>
           </div>
         </div>
@@ -34,13 +38,13 @@ const Summary = ({pnl,pnlp,currPrice,avgPrice}) => {
 
       <div className="section">
         <span>
-          <p>Holdings (13)</p>
+          <p>Holdings ({holdings.length})</p>
         </span>
 
         <div className="data">
           <div className="first">
-            <h3 className="profit">
-              {pnl}k <small>+{pnlp}%</small>{" "}
+            <h3 className={pnlClass}>
+              {pnl}k <small className={pnlClass}>{pnlp}%</small>{" "}
             </h3>
             <p>P&L</p>
           </div>

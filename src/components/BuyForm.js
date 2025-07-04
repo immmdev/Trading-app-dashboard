@@ -8,20 +8,37 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
   const { user } = useAuthContext();
   const { holdings, setHoldings, watchlist } = useContext(ZeroContext);
   const [qantity, setQantity] = useState(0);
-  const[sellQantity, setSellQantity]=useState(0);
-  let [isSell, setIsSell] = useState(0);
+  const [sellQantity, setSellQantity] = useState(0);
+  let { isSell, setIsSell } = useContext(ZeroContext);
   const { wallet, setWallet } = useContext(ZeroContext);
 
   let AvailableAmount = wallet.amount;
 
 
-    let requiredStock = holdings.filter((el) => {
-      return el.name == stock.name;
-    })
+  let requiredStock = holdings.filter((el) => {
+    return el.name == stock.name;
+  });
 
-  
 
-  
+
+  const handleSell = async (amountTosend) => {
+    if (amountTosend > AvailableAmount) {
+      return false;
+    }
+    try {
+      await axios.post("http://localhost:3002/wallet", { updatedAmount: amountTosend }, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  };
+
+
 
   const handleBuy = async (amountTosend) => {
 
@@ -53,18 +70,71 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
     mode: "online",
   });
 
-
-
-  // handleing click
-  const onClickHandle = async (e) => {
+  // handling click sell
+  const onClickHandleSell = async (e) => {
     e.preventDefault();
-    
+
     if (!user) {
       toast.error("You must be logged in");
       return;
     }
-    
-    
+
+    if (requiredStock[0].qty > 0 && requiredStock[0].qty) {
+      handleSell(requiredStock[0].price * sellQantity).then((res) => {
+        console.log(res);
+
+
+
+        const stockSell = {
+          name: requiredStock[0].name,
+          qty: sellQantity,
+        }
+
+        axios.post("http://localhost:3002/sell-stock", { stockSell }, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+
+        })
+        .then((res) => {
+          res.json("success in selling stock")
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+        toast.success("Sold stock succesfully");
+
+        setBuyWindow(false);
+
+        setTimeout(() => {
+          setShowWatchlistActions(false);
+        }, 100);
+
+      })
+      .catch((err) => {
+      console.log(err);
+      toast.error("Selling stock failed");
+      setBuyWindow(false);
+      setTimeout(() => {
+      setShowWatchlistActions(false);
+        }, 100);
+      });
+    }
+
+
+  }
+
+  // handleing click
+  const onClickHandle = async (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      toast.error("You must be logged in");
+      return;
+    }
+
+
     const avg = stock.avg;
     const net = (((stock.price - avg) / avg) * 100).toFixed(2);
     const day = (((stock.price - avg) / avg) * 100).toFixed(2);
@@ -90,6 +160,7 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
 
     setOrder(payload.order);
 
+
     const isBalanceSufficient = await handleBuy(qantity * stock.price); //asynchronous function handled using await
 
     if (!isBalanceSufficient) {  // checking consion on wallet
@@ -100,8 +171,6 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
       toast.error("Insufficient balance");
       return;
     }
-
-
 
     axios
       .post("http://localhost:3002/order", payload, {
@@ -225,7 +294,7 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
                     placeholder="Quantity"
                     value={requiredStock[0].qty}
                     readOnly
-                    // onChange={onChangeHandle}
+                  // onChange={onChangeHandle}
                   />
                 </div>
                 <div className="mb-3">
@@ -238,7 +307,7 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
                     className="form-control"
                     placeholder="Quantity"
                     value={sellQantity}
-                    onChange={(e)=> setSellQantity(e.target.value)}
+                    onChange={(e) => setSellQantity(e.target.value)}
                   />
                 </div>
 
@@ -271,7 +340,7 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
         <div className="d-flex justify-content-center">
           {isSell ? (
             <>
-              <button className="btn buy-btn w-100" onClick={onClickHandle}>
+              <button className="btn buy-btn w-100" onClick={onClickHandleSell}>
                 SELL
               </button>
             </>

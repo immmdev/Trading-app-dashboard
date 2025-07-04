@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 
 import AppsZero from "./AppsZero";
-import Funds from "./Funds";
 import Holdings from "./Holdings";
 import Orders from "./Orders";
 import Positions from "./Positions";
@@ -134,11 +133,10 @@ const Dashboard = () => {
 
           } />
           <Route path="/positions" element={user? <Positions />:<Navigate to='/login'/>} />
-          <Route path="/funds" element={user? <Funds />:<Navigate to='/login'/>} />
           <Route path="/apps" element={<AppsZero />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
-           <Route path="/wallet" element={<Wallet />} />
+           <Route path="/wallet" element={user? <Wallet />:<Navigate to='/login'/>} />
         </Routes>
       </div>
     </div>

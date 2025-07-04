@@ -22,7 +22,6 @@ const Holdings = ({pnl,pnlp,currPrice,totalPrice,holdings}) => {
             <th style={{fontSize:"14px"}}>Cur. val</th>
             <th style={{fontSize:"14px"}}>P&L</th>
             <th style={{fontSize:"14px"}}>Net chg.</th>
-            <th style={{fontSize:"14px"}}>Day chg.</th>
           </tr>
 
           {holdings.map((stock, index) => {
@@ -41,8 +40,8 @@ const Holdings = ({pnl,pnlp,currPrice,totalPrice,holdings}) => {
                 <td className={profClass}>
                   {(currValue - stock.avg * stock.qty).toFixed(2)}
                 </td>
-                <td className={profClass}>{stock.net}%</td>
-                <td style={{ fontSize: "14px" }} className={dayClass}>{stock.day}%</td>
+                <td style={{ fontSize: "14px" }} className={profClass}>{stock.net}%</td>
+
               </tr>
             );
           })}

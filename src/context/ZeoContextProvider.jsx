@@ -7,10 +7,17 @@ const ZeroContextProvider=({children})=>{
     let [wallet, setWallet] = useState({});
     let [deposit, setDeposit] = useState(0);
     let [withdraw, setWithdraw] = useState(0);
+    let [isSell, setIsSell] = useState(0);
 
     
     return (
-        <ZeroContext.Provider value={{holdings, setHoldings,watchlist, setWatchlist, wallet, setWallet,deposit, setDeposit,withdraw, setWithdraw}}>
+        <ZeroContext.Provider value={{holdings, setHoldings,
+            watchlist, setWatchlist, 
+            wallet, setWallet, 
+            deposit, setDeposit,
+            withdraw, setWithdraw,
+            isSell, setIsSell
+            }}>
             {children}
         </ZeroContext.Provider>
     )

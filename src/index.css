@@ -944,3 +944,7 @@ hr {
   background-color: #c82333 !important;
   color: black !important;
 }
+
+.loss{
+  color: red !important;
+}

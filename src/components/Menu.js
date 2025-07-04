@@ -23,7 +23,7 @@ const Menu = () => {
   return (
     <div className="menu-container p-3">
       {/* Logo */}
-      <div className="text-center mb-4">
+      <div className="text-center">
         <img src="logo.png" alt="Logo" style={{ width: "50px" }} />
       </div>
 
@@ -56,13 +56,7 @@ const Menu = () => {
           </Link>
         </li>
 
-        {/* Funds */}
-        <li className="nav-item mt-1">
-          <Link to="/funds" style={{ textDecoration: "none" }} onClick={() => handleMenuClick(4)}>
-            <p className={selectedMenu === 4 ? activeMenuClass : menuClass}>Funds</p>
-          </Link>
-        </li>
-
+    
         {/* Apps */}
         <li className="nav-item mt-1">
           <Link to="/apps" style={{ textDecoration: "none" }} onClick={() => handleMenuClick(5)}>
