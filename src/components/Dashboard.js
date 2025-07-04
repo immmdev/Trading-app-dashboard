@@ -32,7 +32,7 @@ const Dashboard = () => {
   // Fetch orders
   useEffect(() => {
     const fetchOrders = async () => {
-      axios.get("http://localhost:3002/orders-display",{
+      axios.get("https://trading-app-wilt.onrender.com/orders-display",{
         headers:{
           'Authorization':`Bearer ${user.token}`
         }
@@ -54,7 +54,7 @@ const Dashboard = () => {
   // Fetch and update holdings
   useEffect(() => {
     const fetchHoldings=async()=>{
-      axios.get("http://localhost:3002/holdings-display",{
+      axios.get("https://trading-app-wilt.onrender.com/holdings-display",{
          headers:{
           'Authorization':`Bearer ${user.token}`
         }

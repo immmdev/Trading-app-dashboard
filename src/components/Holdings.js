@@ -1,10 +1,3 @@
-
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
-
-
-
 const Holdings = ({pnl,pnlp,currPrice,totalPrice,holdings}) => {
 
 

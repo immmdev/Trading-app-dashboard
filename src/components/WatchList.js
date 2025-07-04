@@ -21,7 +21,7 @@ const WatchList = () => {
   useEffect(() => {
     let intervalId;
 
-    axios.get("http://localhost:3002/watchlist").then((res) => {
+    axios.get("https://trading-app-wilt.onrender.com/watchlist").then((res) => {
       let initialData = res.data;
       setWatchlist(initialData);
 

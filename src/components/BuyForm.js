@@ -26,7 +26,7 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
       return false;
     }
     try {
-      await axios.post("http://localhost:3002/wallet", { updatedAmount: amountTosend }, {
+      await axios.post("https://trading-app-wilt.onrender.com/wallet", { updatedAmount: amountTosend }, {
         headers: {
           'Authorization': `Bearer ${user.token}`
         }
@@ -49,7 +49,7 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
     amountTosend = -Math.abs(amountTosend);
 
     try {
-      await axios.post("http://localhost:3002/wallet", { updatedAmount: amountTosend }, {
+      await axios.post("https://trading-app-wilt.onrender.com/wallet", { updatedAmount: amountTosend }, {
         headers: {
           'Authorization': `Bearer ${user.token}`
         }
@@ -90,7 +90,7 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
           qty: sellQantity,
         }
 
-        axios.post("http://localhost:3002/sell-stock", { stockSell }, {
+        axios.post("https://trading-app-wilt.onrender.com/sell-stock", { stockSell }, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
@@ -173,7 +173,7 @@ function BuyForm({ stock, setBuyWindow, setShowWatchlistActions }) {
     }
 
     axios
-      .post("http://localhost:3002/order", payload, {
+      .post("https://trading-app-wilt.onrender.com/order", payload, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

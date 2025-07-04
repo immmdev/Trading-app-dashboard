@@ -9,7 +9,7 @@ const Positions = () => {
   const {user}=useAuthContext();
   useEffect(()=>{
 
-    const featchPositions=()=>{axios.get("http://localhost:3002/allpositions-display",{
+    const featchPositions=()=>{axios.get("https://trading-app-wilt.onrender.com/allpositions-display",{
        headers:{
           'Authorization':`Bearer ${user.token}`
         }

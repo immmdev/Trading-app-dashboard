@@ -14,7 +14,7 @@ function Wallet() {
 
 
     const fetchWallet = async () => {
-        axios.get("http://localhost:3002/wallet", {
+        axios.get("https://trading-app-wilt.onrender.com/wallet", {
             headers: {
                 'Authorization': `Bearer ${user.token}`
             }
@@ -55,7 +55,7 @@ function Wallet() {
         }
         const amountTosend = isWithdraw ? -Math.abs(withdraw) : Math.abs(deposit);
 
-        axios.post("http://localhost:3002/wallet", { updatedAmount: amountTosend }, {
+        axios.post("https://trading-app-wilt.onrender.com/wallet", { updatedAmount: amountTosend }, {
             headers: {
                 'Authorization': `Bearer ${user.token}`
             }

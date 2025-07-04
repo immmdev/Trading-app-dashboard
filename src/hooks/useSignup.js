@@ -11,7 +11,7 @@ export const useSignup = () => {
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:3002/signup', {
+            const response = await fetch('https://trading-app-wilt.onrender.com/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, username, email, password })
