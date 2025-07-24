@@ -33,23 +33,26 @@ function Wallet() {
 
     const onClickHandle = (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        
 
         if (isWithdraw === 1) {
             if (isNaN(withdraw) || withdraw <= 0) {
                 toast.error("Enter a valid withdrawal amount!");
                 setIsLoading(false);
+                setDeposit(0);
                 return;
             }
             if (withdraw > wallet.amount) {
                 toast.error("Insufficient amount!");
                 setIsLoading(false);
+                setDeposit(0);
                 return;
             }
         } else {
             if (isNaN(deposit) || deposit <= 0) {
                 toast.error("Enter a valid deposit amount!");
                 setIsLoading(false);
+                setDeposit(0);
                 return;
             }
         }
@@ -63,12 +66,14 @@ function Wallet() {
             console.log(res);
             fetchWallet();
             toast.success("Updated Wallet successfully");
-
             setIsLoading(false);
+            setDeposit(0);
+
         }).catch((err) => {
             console.log(err);
             toast.error("Updation wallet failed");
             setIsLoading(false);
+            setDeposit(0);
         });
     }
 
@@ -121,7 +126,7 @@ function Wallet() {
                                 <input
                                     placeholder="Withdraw Amount"
                                     id="widthdraw"
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     value={withdraw === 0 ? '' : withdraw}
                                     onChange={(e) => setWithdraw(Number(e.target.value))}
@@ -140,7 +145,7 @@ function Wallet() {
                                 <input
                                     placeholder="Deposit Amount"
                                     id="amount"
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     value={deposit === 0 ? '' : deposit}
                                     onChange={(e) => setDeposit(Number(e.target.value))}
