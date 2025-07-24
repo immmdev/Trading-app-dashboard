@@ -39,20 +39,20 @@ function Wallet() {
             if (isNaN(withdraw) || withdraw <= 0) {
                 toast.error("Enter a valid withdrawal amount!");
                 setIsLoading(false);
-                setDeposit(0);
+                
                 return;
             }
             if (withdraw > wallet.amount) {
                 toast.error("Insufficient amount!");
                 setIsLoading(false);
-                setDeposit(0);
+                
                 return;
             }
         } else {
             if (isNaN(deposit) || deposit <= 0) {
                 toast.error("Enter a valid deposit amount!");
                 setIsLoading(false);
-                setDeposit(0);
+        
                 return;
             }
         }
@@ -67,13 +67,13 @@ function Wallet() {
             fetchWallet();
             toast.success("Updated Wallet successfully");
             setIsLoading(false);
-            setDeposit(0);
+            
 
         }).catch((err) => {
             console.log(err);
             toast.error("Updation wallet failed");
             setIsLoading(false);
-            setDeposit(0);
+        
         });
     }
 
