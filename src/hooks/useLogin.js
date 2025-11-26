@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export const useLogin = () => {
     const [error, setError] = useState(null);
@@ -29,7 +29,7 @@ export const useLogin = () => {
 
             // Save the user to local storage
             localStorage.setItem("user", JSON.stringify(json));
-            navigate("/");
+             navigate("/");
             // Update the auth context
             dispatch({ type: "LOGIN", payload: json });
 
